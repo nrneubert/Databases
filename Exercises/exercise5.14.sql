@@ -1,0 +1,13 @@
+CREATE SCHEMA IF NOT EXISTS exercise514;
+
+USE exercise514;
+
+ALTER TABLE car ADD COLUMN color VARCHAR(50);
+
+ALTER TABLE rental_car DROP COLUMN amount_received;
+
+ALTER TABLE rental MODIFY COLUMN hourly_rate DECIMAL(10,2);
+
+ALTER TABLE servicing ADD FOREIGN KEY (car) REFERENCES Car(car);
+
+
