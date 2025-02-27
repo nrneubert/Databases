@@ -142,6 +142,13 @@ SELECT S.name, SUM(D.amount) FROM Supporter AS S JOIN Donations AS D ON S.id = D
 # 1b
 SELECT S.name FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id WHERE D.ngo_name = 'KDG' GROUP BY S.id 
 	HAVING COUNT(*) > FLOOR((SELECT AVG(donation_counts) FROM (SELECT COUNT(*) AS donation_counts FROM Donations WHERE ngo_name='KDG' GROUP BY s_id) AS avg_counts));
+
+# average donation amount to KDG
+SELECT DISTINCT S.name FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id 
+	WHERE D.ngo_name='KDG' AND D.amount > (SELECT AVG(amount) FROM Donations WHERE ngo_name='KDG');
+SELECT AVG(amount) FROM Donations WHERE ngo_name='KDG';
+SELECT * FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id WHERE D.ngo_name='KDG';
+
 # 1c
 
 SELECT DISTINCT n.name AS NGOName, s.name AS SupporterName FROM NGO n 
@@ -156,16 +163,9 @@ SELECT DISTINCT n.name AS NGOName, s.name AS SupporterName FROM NGO n
 		)
 	ORDER BY n.name;
 
-SELECT s_id, ngo_name FROM Donations GROUP BY s_id, ngo_name
-			HAVING COUNT(*) > 
-            ( SELECT AVG(donation_count) FROM
-                    (SELECT COUNT(*) AS donation_count FROM Donations WHERE ngo_name = n.name GROUP BY s_id) AS subquery
-            );
-
-SELECT AVG(donation_count) FROM
-                    (SELECT COUNT(*) AS donation_count FROM Donations WHERE ngo_name = 'KDG' GROUP BY s_id) AS avg_donations;
-
-SELECT COUNT(*) AS donation_count FROM Donations WHERE ngo_name = 'KDG' GROUP BY s_id;
+SELECT DISTINCT S.name, S.ngo_name FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id
+	WHERE D.ngo_name=S.ngo_name AND D.amount > (SELECT AVG(D2.amount) FROM Donations AS D2 WHERE D2.ngo_name=D.ngo_name)
+    ORDER BY S.ngo_name;
 
 # 2a
 ALTER TABLE Supporter 
