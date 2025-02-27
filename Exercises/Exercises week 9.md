@@ -84,9 +84,8 @@ BCNF is satisfied because the above.
 
 3. $XYZ \rightarrow Z, \quad Z\rightarrow X$
 1NF is satisfied.
-2NF is satisfied because $Z$ is part of a candidate key.
-3NF is satisfied because $X$ is a prime attribute
-BCNF is not satisfied because $Z$ is not a superkey. 
+2NF is not satisfied because $Z$ is only part of a candidate key.
+
 
 ---
 ##### Exercise 14.34
@@ -102,7 +101,69 @@ argue using the generalized definition of the 3NF that this relation is not in 3
 Then argue from your knowledge of 2NF, why it is not even in 2NF. 
 
 -----
+2NF is violated because you have partial dependencies.
+For that reason it is not in 3NF or BCNF. 
 
+-----
+##### 15.29
+Apply Algorithm 15.2(a) to the relations in exercise 14.27 and 14.28 to **determine a key** for $R$
+Apply the **synthesis** algorithm (Algorithm 15.4) to decompose $R$ into 3NF relations and the decomposition algorithm (Algorithm 15.5) to decompose $R$ into BCNF relations.
 
+-----
+![[Pasted image 20250227122653.png|500]]
+![[Pasted image 20250227124416.png|500]]
+![[Pasted image 20250227125008.png|500]]
 
+***To exercise 14.27***
+<u>Find key</u>
+First we attempt to remove $A$. Then we can not hit it again, so that is no good.
+We can remove B and still hit it, so we remove that one.
+We can also remove C and still hit it, so we also remove that one.
+We can not remove D.
+We can not remove E, so
+$$
+K=\{A,D,E\}
+$$
+<u>Decompose to 3NF</u>
+1. $K=\{A,B,D\}$ is already a minimal cover.
+2. Split each relation up from LHS
+$R_1=\{A,B,C\}, R_2=\{C,D,E\}, R_3=\{D,E,B\}$
+We can not see the key, so we have to introduce another relation
+$R_4=\{A,B,D\}$
+3. Is any of the relations a subset of another? <u>No</u>
 
+<u>Decompose to BCNF</u>
+From the 4 above relations it is already in BCNF. 
+
+***To exercise 14.28***
+<u>Find key</u>
+We found: $K=\{A,G,H,I,J\}$
+<u>Decompose to 3NF</u>
+Because $K$ is contained in $R_2$, we get
+$$
+	R_1 = \{A,C,D,E\} \quad R_2 = \{A,B,G,H,I,J,K, F\}
+$$
+<u>Decompose to BCNF</u>
+It is already in BCNF. 
+
+--------
+##### 14.24
+Consider the universal relation
+$$
+R(A,B,C,D,E,F,G,H,I,J)
+$$
+and the following set of functional dependencies:
+$$
+AB\rightarrow C \quad A\rightarrow DE \quad B\rightarrow F \quad F\rightarrow GH \quad D\rightarrow IJ
+$$
+What is the key for $R$? Decompose $R$ into 2NF and then 3NF relations.  
+
+------
+*Key* is $K=\{A,B\}$.
+*Decompose to 2NF*:
+We can not have any partial dependencies, i.e. $B\rightarrow F$ and $A\rightarrow D,E$ needs to be put into relations intersected.
+So the relations are:
+
+*Decompose to 3NF*: 
+We can not have any transitive dependencies, i.e. $B\rightarrow F$ and $F\rightarrow G,H$.
+So the relations are:
