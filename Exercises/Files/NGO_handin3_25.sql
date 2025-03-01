@@ -144,7 +144,7 @@ SELECT S.name FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id WHERE D.n
 	HAVING COUNT(*) > FLOOR((SELECT AVG(donation_counts) FROM (SELECT COUNT(*) AS donation_counts FROM Donations WHERE ngo_name='KDG' GROUP BY s_id) AS avg_counts));
 
 # average donation amount to KDG
-SELECT DISTINCT S.name FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id 
+SELECT S.name FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id 
 	WHERE D.ngo_name='KDG' AND D.amount > (SELECT AVG(amount) FROM Donations WHERE ngo_name='KDG');
 SELECT AVG(amount) FROM Donations WHERE ngo_name='KDG';
 SELECT * FROM Supporter AS S JOIN Donations AS D ON S.id = D.s_id WHERE D.ngo_name='KDG';
