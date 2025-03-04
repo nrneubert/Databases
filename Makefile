@@ -4,6 +4,8 @@ SHELL := pwsh.exe
 .SHELLFLAGS := -Command
 
 # @ suppresses outputs into the terminal!
+.SILENT :
+.PHONY : mv 
 mv : 
-	@if(!(Test-Path .\Images)) { echo "Directory does not exist"; exit 1 }
-	@Move-Item -Path *.png -Destination .\Images -Force
+	if(!(Test-Path .\Images)) { echo "Directory does not exist"; exit 1 }
+	Move-Item -Path *.png -Destination .\Images -Force
