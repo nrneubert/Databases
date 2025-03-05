@@ -1,0 +1,261 @@
+{
+  "main": {
+    "id": "0a3c93e3e2bf0a78",
+    "type": "split",
+    "children": [
+      {
+        "id": "2b7b5faf5fb7c697",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "897974553a5f58da",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Databases (14-02).md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Databases (14-02)"
+            }
+          },
+          {
+            "id": "3e60115eb9115675",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Databases (11-02).md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Databases (11-02)"
+            }
+          },
+          {
+            "id": "7567e38328284253",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Exercises/Exercises week 9.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Exercises week 9"
+            }
+          },
+          {
+            "id": "7c17cf07f98c9983",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Exercises week 10.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Exercises week 10"
+            }
+          },
+          {
+            "id": "acad299725bfc4f6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Databases (11-02).md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Databases (11-02)"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7ccdf9f7cefd45c0",
+    "type": "split",
+    "children": [
+      {
+        "id": "32ab889d86f2d0e4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bedfccbbdbb9125a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "byCreatedTimeReverse",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a91c9cfc569e2c40",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "914bc04cc12e756f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "998df3542b535b66",
+    "type": "split",
+    "children": [
+      {
+        "id": "a902847f27668813",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "199a885b499d7528",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Test.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Test"
+            }
+          },
+          {
+            "id": "211e5f2de56d0209",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Test.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Test"
+            }
+          },
+          {
+            "id": "b47b5ab885d4e82e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3206d008e878a620",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Test.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Test"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "7c17cf07f98c9983",
+  "lastOpenFiles": [
+    "Exercises/Files/sql_employee_data.sql.1NV122",
+    "Exercises/Files/Offices.sql",
+    "Exercises/Exercises week 9.md",
+    "Exercises week 10.md",
+    "Exercises/Exercises week 8.md",
+    "Exercises/Exercises week 6.md",
+    "Databases (11-02).md",
+    "Databases (14-02).md",
+    "Slides/L6 FunDep 25.pdf",
+    "Slides/L5 ComplexQueries 25.pdf",
+    "Databases (18-02).md",
+    "Exercises/exercise5.14.sql",
+    "Pasted image 20250218134304.png",
+    "Pasted image 20250218134251.png",
+    "Pasted image 20250218133603.png",
+    "Pasted image 20250218132954.png",
+    "Pasted image 20250218124933.png",
+    "Pasted image 20250218124202.png",
+    "Slides/L7 Norm.pdf",
+    "Exercises/NGO_handin2.sql",
+    "Images/ClosureAndKeys.png",
+    "Databases (04-02).md",
+    "Images/FD-notation.png",
+    "Databases (07-02).md",
+    "Databases (28-01).md",
+    "Exercises/exercise6.12.sql",
+    "Exercises/exercise6.10.sql",
+    "Exercises/Files/6.12_db25.sql",
+    "Exercises/Files/6.10.sql",
+    "Images/INvsJOIN.png",
+    "Images/DifferentKindsOfJoin.png",
+    "Databases (31-01).md",
+    "Images/Cardinality.md",
+    "Welcome.md",
+    "Test.md"
+  ]
+}

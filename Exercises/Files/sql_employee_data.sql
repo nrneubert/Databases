@@ -1,4 +1,6 @@
 # Excercises 7.5 and 7.7
+SELECT * FROM Employee; 
+
 drop schema if exists EP;
 create schema if not exists EP;
 use EP;
