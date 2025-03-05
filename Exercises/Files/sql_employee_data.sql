@@ -1,6 +1,4 @@
 # Excercises 7.5 and 7.7
-SELECT * FROM Employee; 
-
 drop schema if exists EP;
 create schema if not exists EP;
 use EP;
@@ -195,10 +193,58 @@ SELECT E.Fname, E.Lname FROM Employee E
 
 # a)
 
-select name, major from student where not exists (select * from grade_report where student_number = student.student_number and not(grade='A'));
+-- select name, major from student where not exists (select * from grade_report where student_number = student.student_number and not(grade='A'));
 
 # b )
 
-select name, major from student where not exists (select * from grade_report where student_number = student.student_number and grade='A');
+-- select name, major from student where not exists (select * from grade_report where student_number = student.student_number and grade='A');
 
+# 26.34
 
+-- (a) Whenever an employee’s project assignments are changed, 
+-- check if the total hours per week spent on the employee’s projects are less than 30 or greater than 40; 
+-- if so, notify the employee’s direct supervisor.
+
+DELIMITER //
+
+DROP TABLE IF EXISTS trigger_log;
+CREATE TABLE trigger_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    message VARCHAR(255),
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TRIGGER IF EXISTS AlertSupervisor;
+CREATE TRIGGER AlertSupervisor
+BEFORE UPDATE ON Works_on
+FOR EACH ROW
+BEGIN
+    DECLARE total_hours DECIMAL(5,1);
+    SELECT SUM(hours) INTO total_hours FROM Works_on WHERE Pno = NEW.Pno;
+    IF (total_hours >= 0 AND total_hours <= 700) THEN 
+        INSERT INTO trigger_log (message) VALUES (CONCAT('Total hours: ', total_hours));
+    END IF;
+END;
+    
+SELECT * FROM Works_on;
+SELECT SUM(hours) FROM Works_on WHERE Pno=2;
+UPDATE Works_on SET hours=38 WHERE Pno=2;
+SELECT * FROM Works_on;
+SELECT * FROM trigger_log;
+
+-- (b) Whenever an EMPLOYEE is deleted, delete the PROJECT tuples and DEPENDENT tuples related to that employee, 
+-- and if the employee is managing a department or supervising any employees, set the MGRSSN for that department to null 
+-- and set the SUPERSSN for those employees to null.
+
+DELIMITER //
+DROP TRIGGER IF EXISTS OnDeleteEmployee;
+CREATE TRIGGER OnDeleteEmployee 
+		AFTER DELETE ON Employee
+        FOR EACH ROW
+        BEGIN
+			DELETE FROM Works_on WHERE Essn = OLD.Ssn;
+			DELETE FROM Dependent WHERE Essn = OLD.Ssn;
+            UPDATE Employee SET Super_ssn = NULL WHERE Super_ssn = OLD.Ssn;
+			UPDATE DEPARTMENT SET Mgr_ssn = NULL WHERE Mgr_ssn = OLD.Ssn;
+		END//
+DELIMITER ;
