@@ -1,4 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS `Offices`;
+USE Offices;
 
 DROP TABLE IF EXISTS Rooms;
 

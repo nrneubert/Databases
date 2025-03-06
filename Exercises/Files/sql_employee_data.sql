@@ -205,8 +205,6 @@ SELECT E.Fname, E.Lname FROM Employee E
 -- check if the total hours per week spent on the employee’s projects are less than 30 or greater than 40; 
 -- if so, notify the employee’s direct supervisor.
 
-DELIMITER //
-
 DROP TABLE IF EXISTS trigger_log;
 CREATE TABLE trigger_log (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -214,6 +212,7 @@ CREATE TABLE trigger_log (
     log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DELIMITER //
 DROP TRIGGER IF EXISTS AlertSupervisor;
 CREATE TRIGGER AlertSupervisor
 BEFORE UPDATE ON Works_on
@@ -224,11 +223,12 @@ BEGIN
     IF (total_hours >= 0 AND total_hours <= 700) THEN 
         INSERT INTO trigger_log (message) VALUES (CONCAT('Total hours: ', total_hours));
     END IF;
-END;
+END//
+DELIMITER ;
     
 SELECT * FROM Works_on;
 SELECT SUM(hours) FROM Works_on WHERE Pno=2;
-UPDATE Works_on SET hours=38 WHERE Pno=2;
+UPDATE Works_on SET hours=40 WHERE Pno=2;
 SELECT * FROM Works_on;
 SELECT * FROM trigger_log;
 
@@ -248,3 +248,21 @@ CREATE TRIGGER OnDeleteEmployee
 			UPDATE DEPARTMENT SET Mgr_ssn = NULL WHERE Mgr_ssn = OLD.Ssn;
 		END//
 DELIMITER ;
+
+-- 7.9
+
+DROP VIEW IF EXISTS DEPT_SUMMARY;
+CREATE VIEW DEPT_SUMMARY(D, C, Total_s, Average_s)
+AS SELECT DNo, COUNT(*), SUM(Salary), AVG (Salary)
+FROM EMPLOYEE
+GROUP BY Dno;
+
+SELECT * FROM DEPT_SUMMARY;
+
+SELECT D, C FROM DEPT_SUMMARY WHERE TOTAL_S > 100000;
+
+SELECT D, AVERAGE_S FROM DEPT_SUMMARY WHERE C > (SELECT C FROM DEPT_SUMMARY WHERE D = 4);
+
+UPDATE DEPT_SUMMARY SET D = 3 WHERE D = 4;
+
+DELETE FROM DEPT_SUMMARY WHERE C > 4;
