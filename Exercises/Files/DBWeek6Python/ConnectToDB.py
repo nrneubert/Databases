@@ -3,7 +3,7 @@ from mysql.connector import Error
 
 try:
     connection = mysql.connector.connect(host='localhost',
-                                         database='offices',
+                                         database='NGOs',
                                          user='root',
                                          password='admin')
     if connection.is_connected():
@@ -14,11 +14,11 @@ try:
         record = cursor.fetchone()
         print("You're connected to database: ", record)
 
-        query = ("SELECT * FROM People")
+        query = ("SELECT email FROM Supporter NATURAL JOIN Supports GROUP BY email HAVING COUNT(*) = 1;")
         cursor.execute(query)
 
-        for x in cursor:
-            print(x)
+        for t in cursor:
+            print(t)
 
         
 
