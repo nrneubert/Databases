@@ -56,6 +56,28 @@ Locks are applied using a compatibility matrix:
 There exists a set of rules to follow in order to produce serializable schedules using multiple granularity locking:
 ==Slide 24==.
 
+**Example**:
+![[Pasted image 20250401123444.png|250]]
+*Note*: 
+- both $T_1$ and $T_2$ can have $IX(f_1)$ because they are intentions and no one have an exclusive lock on $f_1$ yet.
+- in shrinking phase it is reversed; you unlock from the bottom and up until the database node, e.g. $f_2$. 
 
+###### Multiversion Two-Phase Locking Using Certify Locks
 
+Allow a transaction $T’$ to read a data item $X$ while it is write- locked by a conflicting transaction $T$.
+
+This is accomplished <u>by maintaining two versions of each data item</u> $X$, where one version must have been written by some committed transaction
+
+In [[L17 MoreCC.pdf]] slide 29, there are steps for concurrency control for this model. 
+
+##### Snapshot isolation
+- *almost* as good as serializable. 
+Transactions see data items based on committed values of the items in the database snapshot *when transaction start*.
+Any changes after transaction start can *not* be seen.
+
+No read locks are needed, <u>only</u> write locks.
+
+$\Rightarrow$ 
+No phantom reads, dirty reads, or non-repeatable read as only committed values are seen. 
+- rare anomalies can occur!
 
