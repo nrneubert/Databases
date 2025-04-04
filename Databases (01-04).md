@@ -2,6 +2,7 @@
 
 ==Topic==: Recovery
 $\Rightarrow$ handling ***failures***!
+hence it is concerned with **D**urability (!) and **A**tomicity.
 
 <u>Types of failures</u>:
 1. System crash
@@ -106,3 +107,4 @@ Based on 3 concepts:
 	- We write to the same original location and disk. 
 2. Repeating history during redo
 3. Logging changes during undo
+
