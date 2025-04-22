@@ -6,12 +6,12 @@ ifeq ($(OS),Windows_NT)
 	SHELL := pwsh.exe
 	# Execute commands as single-line script
 	.SHELLFLAGS := -Command
-	MOVE_CMD = Move-Item -Path *.png -Destination .\Images -Force
+	MOVE_CMD = Move-Item -Path *.png, *.jpg -Destination .\Images -Force
 	CHECK_DIR = if(!(Test-Path .\Images)) { echo "$(CHECK_DIR_MSG)"; exit 1 }
 else ifeq ($(shell uname -s),Linux)
 	SHELL := /bin/bash
 	.SHELLFLAGS := -c
-	MOVE_CMD = mv *.png Images/
+	MOVE_CMD = mv *.png *.jpg Images/
 	CHECK_DIR = if [ ! -d Images ]; then echo "$(CHECK_DIR_MSG)"; exit 1; fi
 else 
 	echo $(error Unrecognized OS)
