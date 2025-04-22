@@ -1,4 +1,4 @@
-[[week 14 - 1 CC.pdf]]
+[[L15 CC DB24.pdf]]
 
 ***Goal of concurrency control***: support more than one user / query at the same time.
 - **Concurrent**: *allow access to database at the same time in interleaved fashion, but ensure same result*

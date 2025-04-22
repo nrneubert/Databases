@@ -1,3 +1,4 @@
+[[L2 ERMod25.pdf]]
 
 We will be talking about relational models:
 - *Effective and captures many situations*
