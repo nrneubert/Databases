@@ -1,5 +1,8 @@
 [[L20 RC DB25.pdf]]
 
+Expressive power of *TRS,  DRC, and relational algebra* are the same.
+$\Rightarrow$ <U>all three languages are relationally complete</U>.
+
 ##### OUTER JOIN operators
 Left outer join: $R \loj S$
 Right outer join: $R \roj S$
@@ -108,7 +111,7 @@ Rather than variables ranging over tuples, now it is *ranging over single values
 
 *Example*: Product has 4 attributes, and hence a query would be
 $$
-\{ I, N, P, C \ | \\mathrm{Product}(I,N,P,C) \wedge P > 1000 \}
+\{ I, N, P, C \ | \ \mathrm{Product}(I,N,P,C) \wedge P > 1000 \}
 $$
 or in general:
 $$
@@ -124,3 +127,28 @@ $$
 \{ \ I, N, P ,C \ | \ \mathrm{Product}(I,N,P,C) \wedge \exists x,y,w \ (\mathrm{Product}(x,y,P,w)) \ \}
 $$
 meaning we match $z=P$. 
+
+*Example*: List the IDs of expensive products that have not been purchased
+$$
+\{ \ I \ | \ \exists N, P, C \ \mathrm{Product}(I, N, P, C) \wedge P > 1000 \wedge \neg (\exists A, B \ \mathrm{Purchased}(A,I,B)) \ \}
+$$
+which also shows the advantage of ***DRS***: *we avoid any join condition*
+
+##### Assertions
+**Assertion**: *general integrity constraints*
+- a condition that *should* always be met. 
+- in algebra or calculi of the form: *there does not exist an offending tuple*.
+
+*Example*: No product has negative price
+**Algebra**: 
+$$
+\sigma_{Price<0}(Product) = \{  \}
+$$
+**Tuple relational calculus**:
+$$
+\neg \exists f(Product(f) \wedge f.Price < 0)
+$$
+**Domain relational calculus**
+$$
+\neg \exists I, N, P, C \ (Product(I,N,P,C) \wedge P < 0)
+$$
