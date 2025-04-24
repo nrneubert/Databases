@@ -5,7 +5,9 @@
 
 There are three conditions to check. See [[L17 MoreCC.pdf]] and [[L18 - Rec.pdf]]. 
 In schedule (a) $T_{1}$ will abort
+![[IMG_0121.jpg|500]]
 In schedule (b) $T_{2}$ will abort
+![[IMG_0123.jpg|500]]
 
 #### ## Exercise Multiple Granularity Locking
 
