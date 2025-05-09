@@ -46,3 +46,15 @@ $$
 \mathrm{classification \ error} = 1 - \mathrm{classification \ accuracy}
 $$
 **Overfitting**: accuracy worse on entire data than on training data
+
+###### Recap:
+###### Navigating a data warehouse
+Functionality to navigate and study data:
+- Roll-up: *data is summarized with increasing generalization*
+- Drill-down: *increasing levels of detail are revealed*
+- Pivot: *cross tabulation is performed*
+- Slice and dice: *performing projection operations on the dimensions*
+- Sorting: *data is sorted by ordinal value*
+- Selection: *data is available by value or range*
+- Derived attributes: *attributes are computed by operations on stored derived values*
+
