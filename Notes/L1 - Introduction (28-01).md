@@ -16,7 +16,7 @@ $\Rightarrow$
 
 **DBMS**: *Database management system*
 - Collection of <u>programs</u>; 
-	*We use MySQL Workbench to make a well-functioning database, and only "configure" the structure of the database.*
+	*We use MySQL to make a well-functioning database, and only "configure" the structure of the database.*
 - Databases make use of the DBMS to support data management
 	*Easy to put in data, ensure data quality and retrieve data*
 - Generic platform
