@@ -131,5 +131,70 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 1. Undo all transactions that has a log entry of *"start"* but no *"commit"*.
 2. Redo all transactions that has a long entry of *"start"* and *"commit"*.
 
+### Transactions
+- Multiuser DBMS systems on single-threaded CPUs are <u>interleaved</u>.
+- Provides mechanism for logical units of database processing.
+
+<u>Database access operations</u>: Done by reading database item into *a program variable*, and then writing the *program variable value* to a database item. 
+
+>==Def.=== (***Transaction***): *A unit of work defined by a* `BEGIN TRANSCATION` and `END TRANSACTION`.
+
+> ==Isolation level==: Defines degree to which transactions are *isolated*!
+1. **`SERLIAZABLE`**: guarantees transcations behave as though they were serial. 
+2. **`REPEATABLE READ`**: read and write locks on rows (not on ranges)!
+	--> no dirty reads!
+	--> *phantoms*: new rows can still be inserted
+3. **`READ COMMITED`**: read and write locks on rows, but read locks released immediately after reading.
+	--> no dirty reads, but because read locks are released you can get different values.
+4. **`READ UNCOMMITED`**: no read locks!
+	--> very risky!
+
+| Isolation level (highest to lowest!) | Dirty reads allowed? | Unrepeatable reads allowed? | Phantom reads allowed? | Concurrency |
+| ------------------------------------ | -------------------- | --------------------------- | ---------------------- | ----------- |
+| `SERIALIZABLE`                       | No                   | No                          | No                     | Low         |
+| `REPEATABLE READ`                    | No                   | No                          | Yes                    | Medium      |
+| `READ COMMITED`                      | No                   | Yes                         | Yes                    | High        |
+| `READ UNCOMMITED`                    | Yes                  | Yes                         | Yes                    | Very High   |
+
+> ==Overview of problems==: 
+1. ***Dirty reads***: 
+	- A transaction updates a database item and then fails for some reason.
+	- Updated item is accessed by another transaction before it is changed back to its original value.
+2. ***Unrepeatable reads***:
+	- A transaction reads the same item twice.
+	- Another transaction changes the value between first and second read
+3. ***Lost update***:
+	- Two transactions access same item rendering its value incorrect.
+4. ***Phantom reads***: 
+	- A transaction queries for an item twice. 
+	- Another transaction inserts an item matching the query between first and second read. 
+
+### Concurrency control
+
+> ==Schedule==: Order in which transactions or operations are performed.
+- --> *Example:* for 
+$$
+\begin{align}
+T_{1} &: \quad R_{1}(X), W_{1}(X) \\
+T_{2} &: \quad R_{2}(X)
+\end{align}
+$$
+	can be interleaved in many different ways!
+$$
+\begin{align}
+1 &: \quad R_{1}(X), W_{1}(X), R_{2}(X) \quad \Rightarrow \text{Serial} \\
+2 &: \quad R_{2}(X), R_{1}(X), W_{1}(X) \quad \Rightarrow \text{Serial} \\
+3 &: \quad R_{1}(X), R_{2}(X), W_{1}(X) \quad \Rightarrow \text{Concurrent}
+\end{align}
+$$
+- ---> Relevant for: *consistency* and *isolation*!
+
+>==Conflict==: Occurs when you have
+1. actions from at least 2 transactions
+2. one of them is a write
+3. they are on the same attribute
+
+
+
 ### Misc
 
