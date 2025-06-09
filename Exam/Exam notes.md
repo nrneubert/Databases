@@ -140,7 +140,7 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 >==Def.=== (***Transaction***): *A unit of work defined by a* `BEGIN TRANSCATION` and `END TRANSACTION`.
 
 > ==Isolation level==: Defines degree to which transactions are *isolated*!
-1. **`SERLIAZABLE`**: guarantees transcations behave as though they were serial. 
+1. **`SERLIAZABLE`**: guarantees transactions behave as though they were serial. 
 2. **`REPEATABLE READ`**: read and write locks on rows (not on ranges)!
 	--> no dirty reads!
 	--> *phantoms*: new rows can still be inserted
@@ -194,7 +194,38 @@ $$
 2. one of them is a write
 3. they are on the same attribute
 
+>==Serializable==: A transaction that is **(conflict) equivalent** to a serial schedule. 
 
+>==Precedence graphs==:
+1. For every transaction make a node.
+2. Draw directed edge from $i$ to $j$ if 
+$$ 
+\begin{align}
+RW &: \ R_{i}(X),\dots, W_{j}(X) \\
+WR &: \ W_{i}(X),\dots,R_{j}(X) \\
+WW &: \ W_{i}(X),\dots,W_{j}(X)
+\end{align}
+$$
+3. If there is a cycle (despite labeling of attributes!) then it is <u>NOT</u> serializable.
+4. To obtain the serializable schedule, follow the arrows from end to end. Note; there may be several. 
+
+#### Timestamping
+- Every transaction gets a *timestamp*; $\mathrm{ST_{1}}\rightarrow \mathrm{TS(T_{1})=1}$.
+- Resolves *at what point in time* the transactions should see the state of information in.  
+
+>==Single version==:
+1.  $R(X) \ : \ W_{TS}(X) \leq TS(T_{i})$
+- *If the write-timestamp is younger than yours, then you should not be allowed to read.*
+	$\Rightarrow$ if allowed: $R_{TS}(X) = \mathrm{max}(R_{TS}(X), TS(T_{i})$
+	$\Rightarrow$ else abort and rollback.
+2. $W(X) \ : \ W_{TS}(X) \leq TS(T_{i}) \ \mathrm{AND} \ R_{TS}(X) \leq TS(T_{i})$
+- *Same as before, but now also if someone younger has written the value, then you should not be allowed to change it at an earlier time.*
+	$\Rightarrow$ if allowed: $W_{TS}(X) = \mathrm{max}(W_{TS}(X), TS(T_{i}))$
+	$\Rightarrow$ else abort and rollback. 
+
+>==Multi version==: Reads will always be okay, but not necessarily for writes.
+1. $R(X) :$ always allowed, but read version with highest $W_{TS}$ that is $\leq TS(T_{i})$
+2. $W(X) :$ find version with highest $W_{TS}$ that is still $\leq TS(T_{i})$. 
+	If $R_{TS} \leq TS(T_{i})$, then it is allowed. Then make a new version with $R_{TS}=W_{TS}=TS(T_{i})$.
 
 ### Misc
-
