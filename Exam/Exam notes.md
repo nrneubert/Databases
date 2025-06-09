@@ -97,11 +97,83 @@ $\Rightarrow$ No arrows pointing towards prime attributes!
 | Insert                 | $O(\log n)$ | $O(\log n)$ |
 | Delete                 | $O(\log n)$ | $O(\log n)$ |
 
-
 > ==Balanced==: all paths from root to a leaf have the same length. 
 - --> guarantees good search performance!
 
+### Authorization
+
+Preparing SQL statements they are compiled **only once**, but **executed multiple times**!
+>==SQL injection attacks==: Using dynamic SQL queries with user inputs, people can inject malicious statements!
+- ***Fix***: Bind inputs to variables and then ==sanitize== them!
+>==Sanitize==: Filters matching the input to patterns and stripping it from invalid patterns.
+
+The Database Administrator (***DBA***) can ==grant permissions==:
+```
+GRANT *privileges* ON *object* TO *identity* WITH GRANT OPTION;
+```
+>==Transitive granting==: Allows users to grant other users privileges: `WITH GRANT OPTION`.
+
+There are the following *privileges*:
+`SELECT`: 
+`INSERT`:
+`DELETE`: 
+`UPDATE`:
+`REFERENCES`: *the right to include an attribute in a foreign key*.
+
+==Revoking privileges== can be done using
+```
+REVOKE *privileges* ON *object* FROM *identities* <CASCADE/RESTRICT>
+```
+where `<CASCADE/RESTRICT>` revolves around *transitive granted privileges*.
+
+To ==create roles== 
+```
+CREATE ROLE Paymaster; 
+GRANT UPDATE(salary) ON Payroll TO Paymaster; 
+GRANT Paymaster TO amoeller WITH GRANT OPTION;
+```
+
+### NoSQL
+$\equiv$ *Not Only SQL*.
+<u>Motivation</u>
+- Huge amounts of data
+- High performance (response time)
+- Consistency less important
+- Scalability (relational model *too restrictive*!)
+$\Rightarrow$ Often done using **distributed databases**!
+
+***Data-model***: "*Master-slave replication or master-master replication and sharding*."
+Commonly *hashing* and *range partitions* is used to localize data.
+
+Categories of systems:
+1. Document-based: ***MongoDB***
+- --> ==Normalized==: *Decompose into several documents of similar structure and content*
+- --> ==Denormalized==: *All information in one document*
+1. Key-value stores: ***Voldemort*** (builds on ***DynamoDB***)
+2. Column-based / wide-column: ***Apache HBase***
+3. Graph-based: ***Neo4j***
+
+>==CRUD==: **C**reate, **R**ead, **U**pdate, **D**elete (+ **S**earch) operations provided through API. 
+
+>==CAP properties==: Goals when replicating data across distributed network:
+- **C**: Consistency (same value among replicas)
+- **A**: Availability (successful read/writes)
+- **P**: Partition tolerance (robust under network failure)
+*Note*: <small>In DBMS *consistency* was integrity constraints, now we only want identical replicas!</small>
+
+>==CAP theorem==: <u>Impossible to guarantee all three: C, A, P.</u>
+- --> NoSQL systems slack on **C**: consistency.
+
+**Keywords**:
+- *No schema required*, instead *semi-structured* data such as JSON, XML!
+- *Less powerful query languages*!
+- May provide *multiple version storage*.
+- *Vertically* scalable (<u>not</u> horizontally)
 ### Recovery strategies
+
+>==Idempotent==: *If a system crashes during the recovery stage, the new recovery must still give correct results*.
+
+>==Cascading rollback==: *A transaction fails or aborts, and as a result, all other transactions that read data modified by the failed transaction must also be rolled back.*
 
 >==Checkpointing==: process where the system periodically writes all modified (*dirty*) pages from memory to disk.
 - improves **recovery** efficiency
@@ -113,6 +185,8 @@ $\Rightarrow$ No arrows pointing towards prime attributes!
 $\approx$ no-undo / no-redo
 
 $\Longrightarrow$ *possible to use both techniques, but often redundant because both handle recovery well*.
+
+>==Write ahead logging== (*WAL*): maintain “before image” in log (main-memory!), flush to disk before overwritten with “after image” on disk
 
 >==Undo==: rollback changes of *uncommited* transactions
   ==Redo==: reapply changes of *commited* transactions after a crash. 
@@ -130,6 +204,18 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 >==Undo/redo==:
 1. Undo all transactions that has a log entry of *"start"* but no *"commit"*.
 2. Redo all transactions that has a long entry of *"start"* and *"commit"*.
+
+>==ARIES==: *Recovery algorithm implemented in many IBM related databases*.
+
+**Based on 3 key ideas**:
+1. Write Ahead Logging: *Log changes **before** writing them to disk.*
+2. Repeat history during redo: *Reapply all actions, including uncommited, to **reconstruct state***
+3. Logging changes during undo: *When undoing, **log each undo action**, so crash during recovery is safe* (**idempotent**)
+
+**Using a 3-phase recovery**:
+1. Analysis: *Identify dirty pages and active transactions*.
+2. Redo: *Repeat history*.
+3. Undo: *Roll back any uncommited transactions using the log*.
 
 ### Transactions
 - Multiuser DBMS systems on single-threaded CPUs are <u>interleaved</u>.
