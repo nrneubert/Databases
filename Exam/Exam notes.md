@@ -300,7 +300,17 @@ $$
 3. If there is a cycle (despite labeling of attributes!) then it is <u>NOT</u> serializable.
 4. To obtain the serializable schedule, follow the arrows from end to end. Note; there may be several. 
 
-#### Locks
+There are different types of schedules:
+1. ==Cascadeless schedule==: Mitigates cascading rollbacks
+>"*Every transaction reads only items written by committed transactions*"
+2. ==Strict schedule==: Mitigates cascading rollbacks
+>"*Transaction can neither read or write item until <u>the last</u> transaction that wrote it has committed.*"
+>$\Rightarrow$ *Transactions can only read committed values!*
+3. ==Recoverable schedule==: 
+>"*No transaction commits until <u>all</u> transactions that have written an item that it read have committed*"
+
+
+#### Locking
 
 >==Binary locks== (*mutex locks*): Ensures safe access to data by having
 - (1) Locked: *data is <u>not</u> accessible by other*
@@ -333,9 +343,68 @@ A transaction must acquire a shared or exclusive lock prior to reading, and an e
 	- Transactions *may unlock* locks 
 	- ( Can *convert (downgrade)*: $E(X) \rightarrow S(X)$ )
 **( ! )** When the first locks is released, the transaction moves from phase 1 to phase 2.
-
+$\Longrightarrow$
 >==Deadlocks==: Cycle of transactions all waiting for another to unlock a data item.
 
+>==Validation (optimistic) concurrency control==: Do the work on *local copies only*, before committing check if there is any issues; if so abort and restart, otherwise write changes to database. 
+1. ***Read phase***: 
+	- Read and write operations are made in local workspace (*copy of relevant data only*!)
+2. ***Validation phase***: (check serializability!)
+	- Assign timestamps when starting validation, check for R/W, W/W conflicts from *older* transactions.
+3. ***Write phase***: 
+	- Local changes are written to database if validation is successful.
+
+Validation is based on 3 steps: $\text{For all other recent: }\mathrm{TS(T_{j}) < TS(T_{i})}$
+1. $\mathrm{T_{j}}$ executes all 3 phases before $\mathrm{T_{i}}$ begins (*serial execution*!)
+2. $\mathrm{T_{j}}$ completes its write phase before $\mathrm{T_{i}}$ starts its write phase, and does not change any items read.
+$$
+\mathrm{write\_set(T_{j}) \ \cap \ read\_set(T_{i})} = \emptyset
+$$
+3. $\mathrm{T_{j}}$ completes its read phase before $\mathrm{T_{i}}$ starts its read phase, and does not change any item that is read or written to.
+$$
+\begin{align}
+\mathrm{write\_set(T_{j}) \ \cap \ read\_set(T_{i})} = \emptyset \\
+\mathrm{write\_set(T_{j}) \ \cap \ write\_set(T_{i})} = \emptyset
+\end{align}
+$$
+$\Rightarrow$ and one of these steps must be true!
+
+>==Multi-version 2-phase locking w. certify locks ==: Allows a transaction $T'$ to read a data item $X$ while it is write-locked by a conflicting transaction $T$.
+- $\Rightarrow$ 3 locks: *read*, *write* (<small>now not exclusive, reads possible</small>), and *certify* (<small>fully exclusive</small>).
+1. When $T$ wants to write $X$, it creates a second version $X'$ <u>after</u> obtaining a *write*-lock.
+2. Other transactions continue reading $X$.
+3. When $T$ is ready to commit, it obtains a *certify*-lock on $X'$.
+4. Committed version $X$ becomes $X'$.
+5. $T$ releases *certify*-lock.
+*Core idea*:
+<small>Instead of just read and write (shared and exclusive, respectively), we now have three locks, read, write, certify (shared, shared with reads, exclusive, respectively). With this, we can allow some reads while an item is write locked, but transactions may have be delay when waiting to certify and deadlocks may occur.</small>
+
+>==Snapshot isolation==: Each transaction sees a snapshot of the database at the time it started. 
+- $\Rightarrow$ *No read locks, only write locks*!
+
+##### Granularity locking
+
+>==Def.== (*Granularity*): Size of a lockable unit of data
+- --> *coarse*: entire database
+- --> *fine*: tuple or attribute of relation
+$\Longrightarrow$ *<u>significantly</u> affects concurrency performance*: 
+- low degree of concurrency for coarse granularity! 
+- high degree of concurrency for fine granularity!
+
+>**Rule of thumb**: 
+> "*We want to choose granularity to reflect the typical access size of transactions*"
+
+>==Granularity hierarchy==: $B$-tree structure of coarse and finer granularity:
+
+![[Pasted image 20250610113116.png| center | 500]]
+
+**Core idea**: <small>Writing to B-tree family indexes could lock a lot of pages, as all index access starts at the root. A more optimistic approach holds shared locks on non-leaf nodes, and exclusive locks on the leaf, unless a split becomes necessary. </small>
+
+To manage this hierarchy we introduce 3 more locks:
+- ***Intention-shared*** (*IS*): indicates that a shared lock(s) will be requested on some descendant nodes(s)
+- ***Intention-exclusive*** (*IX*): indicates that an exclusive lock(s) will be requested on some descendant node(s)
+- ***Shared-intention-exclusive*** (*SIX*): indicates that the current node is locked in shared mode but an exclusive lock(s) will be requested on some descendant nodes(s)
+	$\Rightarrow$ *typically when you want to read a node and want an exclusive lock on a descendant node*.
 
 #### Timestamping
 - Every transaction gets a *timestamp*; $\mathrm{ST_{1}}\rightarrow \mathrm{TS(T_{1})=1}$.
@@ -355,5 +424,7 @@ A transaction must acquire a shared or exclusive lock prior to reading, and an e
 1. $R(X) :$ always allowed, but read version with highest $W_{TS}$ that is $\leq TS(T_{i})$
 2. $W(X) :$ find version with highest $W_{TS}$ that is still $\leq TS(T_{i})$. 
 	If $R_{TS} \leq TS(T_{i})$, then it is allowed. Then make a new version with $R_{TS}=W_{TS}=TS(T_{i})$.
+**( ! )**  <small>Storage (RAM and disk) is required to maintain multiple versions!</small>
+
 
 ### Misc

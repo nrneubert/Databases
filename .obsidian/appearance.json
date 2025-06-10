@@ -1,6 +1,7 @@
 {
   "theme": "obsidian",
   "enabledCssSnippets": [
-    "table-centre"
+    "table-centre",
+    "image-centre"
   ]
 }
