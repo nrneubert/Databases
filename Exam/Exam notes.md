@@ -234,6 +234,8 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 	--> no dirty reads, but because read locks are released you can get different values.
 4. **`READ UNCOMMITED`**: no read locks!
 	--> very risky!
+	
+**( ! )** Isolation levels are a *personal choice*, which affects how *you* see the database state!
 
 | Isolation level (highest to lowest!) | Dirty reads allowed? | Unrepeatable reads allowed? | Phantom reads allowed? | Concurrency |
 | ------------------------------------ | -------------------- | --------------------------- | ---------------------- | ----------- |
@@ -280,11 +282,14 @@ $$
 2. one of them is a write
 3. they are on the same attribute
 
+>==Conflict equivalent==: If transactions $I$ and $J$ do not conflict, we may swap their order to produce a new schedule $S'$. We then denote $S$ and $S'$ are **conflict equivalent**.
+- *Note*: conflicting operations <u>must</u> maintain their relative order!
+
 >==Serializable==: A transaction that is **(conflict) equivalent** to a serial schedule. 
 
 >==Precedence graphs==:
-1. For every transaction make a node.
-2. Draw directed edge from $i$ to $j$ if 
+4. For every transaction make a node.
+5. Draw directed edge from $i$ to $j$ if 
 $$ 
 \begin{align}
 RW &: \ R_{i}(X),\dots, W_{j}(X) \\
@@ -294,6 +299,43 @@ WW &: \ W_{i}(X),\dots,W_{j}(X)
 $$
 3. If there is a cycle (despite labeling of attributes!) then it is <u>NOT</u> serializable.
 4. To obtain the serializable schedule, follow the arrows from end to end. Note; there may be several. 
+
+#### Locks
+
+>==Binary locks== (*mutex locks*): Ensures safe access to data by having
+- (1) Locked: *data is <u>not</u> accessible by other*
+- (0) Unlocked: *data is available for access*
+**Important**: Once locked, no other transaction can read or write the data item! 
+*This is different than shared- and exclusive locks.*
+*Description:*
+<small>
+A lock needs to be acquired before any read or write, and must unlock again after completing all operations; it unlocks only items it currently has a lock on, and requests locks only for items it currently has no lock on.
+</small>
+
+>==Shared- and exclusive locks== (*multiple-mode locking*):
+- Shared lock (S): *Allows multiple transactions to read the data item.*
+	- *Note*: Shared locks are unique for transactions and hence are not "shared"!
+- Exclusive lock (X): *Allows <u>one</u> transaction to write (and also read, if needed)*.
+- Unlock (U): ...
+- Lock-conversion: *A transaction can <u>upgrade</u> a shared- to an exclusive lock, or <u>downgrade</u> an exclusive- to a shared lock.*
+*Description*:
+<small>
+A transaction must acquire a shared or exclusive lock prior to reading, and an exclusive lock prior to writing, and it must unlock again after all its operations are completed; it issues lock requests only for items it does not already hold a lock on, and it issues unlock requests only for items it holds a lock on.
+</small>
+
+>==2-phase locking== (*2PL*) : 
+1. Phase 1 (*growing phase*) : 
+	- Transaction *may request* locks
+	- Transactions *may not unlock* locks
+	- ( Can *convert (upgrade)*: $S(X) \rightarrow E(X)$ )
+2. Phase 2 (*shrinking phase*) :
+	- Transactions *may not request* locks
+	- Transactions *may unlock* locks 
+	- ( Can *convert (downgrade)*: $E(X) \rightarrow S(X)$ )
+**( ! )** When the first locks is released, the transaction moves from phase 1 to phase 2.
+
+>==Deadlocks==: Cycle of transactions all waiting for another to unlock a data item.
+
 
 #### Timestamping
 - Every transaction gets a *timestamp*; $\mathrm{ST_{1}}\rightarrow \mathrm{TS(T_{1})=1}$.
