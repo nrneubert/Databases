@@ -427,4 +427,51 @@ To manage this hierarchy we introduce 3 more locks:
 **( ! )**  <small>Storage (RAM and disk) is required to maintain multiple versions!</small>
 
 
+### Relational algebra
+- Set of (*basic*!) operations for the *relational model*.
+- Working with mathematical sets, duplicates are automatically eliminated!
+- Operations are nested in sequences. 
+- Can not compute recursive closures! $\Rightarrow$ <u>not</u> Turing complete.
+
+`SELECTION`, $\sigma_{\mathrm{Condition}}(\mathrm{Relation})$; specify a subset of of tuples that satisfy a condition.
+- *Resulting schema is unchanged*!
+
+`PROJECTION`, $\pi_{\mathrm{attributes:} \ a_{1},\dots}(\mathrm{Relation})$; specify a subset of attributes.
+
+`RENAMING`, $\rho_{a_{1} \rightarrow b_{1}}(\mathrm{Relation})$; rename relation or attributes.
+
+`CARTESIAN PRODUCT`, $R \times S$; cross join all tuples that can be constructed by combining two tuples from either relation.
+- *Essentially just adding the relations together*.
+
+`THETA JOIN`, $R \tjoin S \equiv \sigma_{\theta}(R \times S)$; combine tuples through $\theta$-condition from two relations into single, "longer" tuples.
+
+$\Rightarrow$ *Variations of join*:
+- `EQUIJOIN`, $...$; only $=$ comparison used, and combines pairs of attributes that have identical values in every tuple.
+- `NATURAL JOIN`, $R * S$; equijoin on attributes of the same name.
+- `OUTER JOIN`, $R \loj, \roj, \foj S$; keep all tuples in $R$, or all those in $S$, or all those in both relations regardless of whether they have matching tuples in the other relation.  
+
+##### Set operations
+- Arguments must have *the same schema*!
+- Result will again have *the same schema*!
+
+`DIVISION`, $A \div B$; return tuples from $A$ which match all tuples from $B$ in all attributes.
+- *Result schema is *$\text{Attributes of }A - \text{Attributes of }B=X$
+
+`UNION`, $R \ \cup \ S$; combines tuples of the two relations and will contain all tuples in either or both.
+
+`INTERSECTION`, $R \ \cap \ S$; combines all tuples that are in both relations
+
+`DIFFERENCE`, $R - S$; all tuples that are in $R$ but not in $S$. 
+
 ### Misc
+
+There are 2 main ways of scaling a *database system*; 
+adding more resources or adding a new system.
+
+>==Horizontal scaling==:  When new systems (server racks!) are added to the existing system. This involves **sharding** (splitting data across servers) and hence *distributing* the database system. 
+
+>==Vertical scaling==: When new resources (CPU, RAM, etc.) are added to the existing system. This is easier to implement, and simply involves upgrading the current machine!
+
+**SQL** is (*typically!*) **vertical scaling** because it does not easily *distribute across several nodes*. However, modern SQL databases are capable of horizontal scaling!
+
+**NoSQL** is (*typically!*) **horizontal scaling** because it is designed to run on *several server nodes*. However, naturally they are also vertical scaling!

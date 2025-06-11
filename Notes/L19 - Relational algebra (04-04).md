@@ -65,7 +65,7 @@ $\Rightarrow$ corresponds to `AS`.
 
 ##### Union, intersection, difference
 
-![[Pasted image 20250404094847.png|400]]
+![[Pasted image 20250404094847.png|600]]
 
 ##### Join
 - combine related tuples from two relations into single "longer" tuples. 
