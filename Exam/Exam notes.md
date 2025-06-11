@@ -450,6 +450,8 @@ $\Rightarrow$ *Variations of join*:
 - `NATURAL JOIN`, $R * S$; equijoin on attributes of the same name.
 - `OUTER JOIN`, $R \loj, \roj, \foj S$; keep all tuples in $R$, or all those in $S$, or all those in both relations regardless of whether they have matching tuples in the other relation.  
 
+**Aggregate functions and grouping**; `SUM`, `AVERAGE`, `MINIMUM`, $\dots$
+$_{\text{group attributes }}\mathfrak{J}_{\text{ aggregate functions}}(\mathrm{Relation})$
 ##### Set operations
 - Arguments must have *the same schema*!
 - Result will again have *the same schema*!
@@ -462,6 +464,58 @@ $\Rightarrow$ *Variations of join*:
 `INTERSECTION`, $R \ \cap \ S$; combines all tuples that are in both relations
 
 `DIFFERENCE`, $R - S$; all tuples that are in $R$ but not in $S$. 
+
+### Relational calculus
+- *Identical expressive power as relational algebra*.
+- *Two types of calculi; **TRC** and **DRC***: both have same *expressive power*!
+
+**( ! )**  *Query languages* are based on **relational calculus***, whilst their *implementations* are based on **relational algebra**. This is because **relational calculus** is:
+1. declarative: *describes what you want, <u>not</u> how to get it*
+2. non-procedural: *does not specify the steps to compute the result*
+
+##### Tuple relational calculus
+- Expresses results as *sets of tuples* that satisfy *a condition*.
+$$
+\{ \ t \ | \text{Relation}(t) \wedge ( \ \text{Conditions}(t) \ ) \ \}
+$$
+Conditions are *boolean expressions*, consisting of operations
+
+| $=$ | $\neq$ | $\leq, \geq$ | $<, >$ |
+| --- | ------ | ------------ | ------ |
+and connected through logical operators
+
+| $\wedge$ | $\vee$ | $\neg$ |
+| -------- | ------ | ------ |
+| "and"    | "or"   | "not"  |
+Also with quantifiers
+
+| $\forall$   |     $\exists$ | $\Rightarrow$ | $\neg \exists$ | $\neg \forall$ |
+| ----------- | ------------: | ------------- | -------------- | -------------- |
+| "universal" | "existential" |               | "not exists"   | "not for all"  |
+
+called **bound** if quantified, otherwise **free**.
+
+>==Safety==: possible to write expressions that generates *infinite* relations!
+- *Example*: $\{ \ t \ | \ \neg\text{Employee}(t) \ \}$; <small>all those tuples that are not employees!</small> 
+$\Longrightarrow$ safe queries must return:
+1. only values from the **active domain** (*values actually appearing in the database*!),
+2. must be **finite**
+- *Example*: $\{ \ t \ | \ \text{Person}(t) \wedge \neg \text{Employee}(t) \ \}$; <small>all people who are not employees!</small>
+
+##### Domain relational calculus
+- Now expresses results as *ranges over single values* from *domains of attributes*!
+$$
+\{ \ x_{1}, \dots, x_{n} \ | \ \text{Relation}(x_{1},\dots,x_{n}) \wedge ( \ \text{Conditions}(x_{1},\dots,x_{n}) \ ) \ \}
+$$
+where $x_{1},\dots,x_{n}$ are attributes of the relation. 
+
+##### Assertions
+General integrity constraints are also available in *TRC* and *DRC*. 
+$\Rightarrow$ *expressed as predicates that must <u>always</u> be fulfilled*!
+*Example*:
+- Algebra: $\sigma_{\text{Price}<0}(\text{Product})=\emptyset$
+- TRC: $\neg \exists f(\text{Product}(f) \wedge f.Price < 0 )$
+- DRC: $\neg \exists I,N,P,C(\text{Product}(I,N,P,C) \wedge P < 0)$
 
 ### Misc
 
