@@ -517,6 +517,99 @@ $\Rightarrow$ *expressed as predicates that must <u>always</u> be fulfilled*!
 - TRC: $\neg \exists f(\text{Product}(f) \wedge f.Price < 0 )$
 - DRC: $\neg \exists I,N,P,C(\text{Product}(I,N,P,C) \wedge P < 0)$
 
+### Query evaluation
+
+>==Overview of **query processing**==: 
+$$
+ \text{Scanning, parsing, analysis} \Rightarrow \underbrace{\text{Query optimization}}_{\textbf{in relational algebra!}} \Rightarrow \text{Query code generator} \Rightarrow \text{Runtime database processor} 
+$$
+>
+Optimization in relational algebra is done by *decomposing the query into blocks*!
+>==**Query block**==: a single `SELECT-FROM-WHERE` expression (possibly with `GROUP BY` and `HAVING`).
+>$\Rightarrow$ *each block is then optimized separately*!
+- which data is needed?
+- where is the data, and how do we retrieve it (e.g. index)?
+- how large is the expected result?
+
+>==Pipelining==: Do not wait for 1 operation to finish, but instead *pass the results* of a previous operator *to the next operator* - *without waiting* to complete the previous operation!
+
+For this, we need to consider the type of operations.
+**Types of selection queries**:
+1. *Point query*; Condition on a single value
+	$\rightarrow$ <small>very high selectivity!</small>
+2. *Range range*; Condition is on a range of values
+	$\rightarrow$ <small>selectivity depends</small>
+3. *Conjunction*; Combines logically two conditions with `AND`
+	$\rightarrow$ <small>selectivity often high</small>
+4. *Disjunction*; Combines logically two conditions with `OR`
+	$\rightarrow$ <small>selectivity often low</small>
+
+>==Condition selectivity==: Determined via. catalog information
+$$
+\text{Selectivity} = \frac{\text{Tuples satisfying condition}}{\text{Total number of tuples in the relation}}
+$$
+
+**Projections** are generally straightforwards, but *removing duplicates can require sorting/hashing*! 
+
+**Aggregates** can require different strategies depending on the operator:
+- `MIN`, `MAX`: *full table scan* or *index-based search (!)*
+- `SUM`, `COUNT`, `AVG`: *dense indexes (!)* or *full table scan* (materialized views can be good?)
+
+**Executing selection for** *point query*:
+- *Linear search* (brute-force!)
+- *Binary search*, if: "ordered"
+- *Index-based search*, if: "key attribute"
+
+**Executing selection for** *conjunction/disjunction*: 
+- Start with most selective condition!
+
+> $\Longrightarrow$ `JOIN` is by far the most *costly* operation!
+ ==*NB*==: strategies work on a *block* basis.
+ 
+ **Overview of *join* strategies**:
+ - *Nested loop join* (brute-force!)
+ - *Index-based join*
+ - *Sort-merge join*
+ - *Hash join*
+ (Explained below...)
+
+>==Semi-join==: Returns *only (!)* rows from *one relation* that has *at least* 1 match with the *other relation*. 
+- *Example*: $R \ltimes_{A} S = X$ with $R(A,B)$ and $S(A,C,D,\dots)$ yields $X(A,B)$ 
+- Reduces the number of tuples, which is beneficial in especially *distributed systems* where you are concerned *how much data is transferred*! 
+- Useful for *unnesting* `EXISTS`, `IN`, `ANY` subqueries because it only cares about 1 match. 
+
+>==Anti-join==: Returns *only (!)* rows from the *first relation* where it *can not find a match* in *the second relation*. 
+- Useful for *unnesting* *negation subqueries*; `NOT EXISTS`, `NOT IN`, `ALL` because it rejects all matching rows. 
+
+>==Join selection factor==: Ratio of tuples in one relation that is expected to be joined with tuples in the other relation.
+- *Generally*, for optimization we want tuples of the *outer relation* to match many tuples of the *inner relation* because we load outer relation blocks less often. 
+
+##### Nested loop join: $\textcolor{red}{\mathcal{O}(n^2)}$
+
+>==*NB*==: Size of the *inner relation* should be *largest*! 
+![[Pasted image 20250612110637.png|center | 600]]
+
+- Number of buffers in main memory determines how many blocks of the inner relation we can process simultaneously.
+- Relation size of the outer dominates the cost.
+- Can be be used to implement `LEFT/RIGHT/FULL OUTER JOIN`; 
+	$\rightarrow$ if `LEFT` use the *left relation* as the *outer relation* and *pad with nulls*!
+
+##### Index-based join:
+
+![[Pasted image 20250612110858.png| center | 500]]
+
+
+##### Sort-merge join:
+- *Most efficient* join is the **merge join**. To efficiently do this, we first *sort* the relations (or store them stored!) and *loads pairs of blocks* into memory and scans them!
+
+![[Pasted image 20250612111020.png| center | 500]]
+
+>==External sorting==: Sorting algorithm *suitable for large files on disk that do not fit entirely in main memory*, such as most database files.
+- <small>We sort large files that do not fit in main memory, typically using a sort-merge strategy where subfiles, runs, of the main file are sorted and these runs are then merged.</small>
+
+##### Hash join:
+![[Pasted image 20250612111719.png| center | 500]]
+
 ### Misc
 
 There are 2 main ways of scaling a *database system*; 

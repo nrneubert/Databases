@@ -3,5 +3,6 @@
   "enabledCssSnippets": [
     "table-centre",
     "image-centre"
-  ]
+  ],
+  "cssTheme": "Blue Topaz"
 }
