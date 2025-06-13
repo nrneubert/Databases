@@ -679,6 +679,9 @@ $$
 3. Perform joins on all (remaining) combinations of 1-itemsets to create 2-itemsets.
 4. Repeat
 
+>==**Classification**==: Learning a model able to describe different classes of data.
+- *Supervised* as the classes to be learned are predetermined
+
 >==**K-means clustering**==: 
 - ( Initialization; partition objects into $k$ sets. )
 - Compute centroids of each cluster: $\mu_{C} = \frac{1}{|C|}\sum_{x_{i} \in C} x_{i}$
@@ -700,6 +703,9 @@ G(A) &= E_{tot} - \sum_{i=1}^{n_\text{outcomes}} \frac{|O_{i}|}{|O|} \cdot E(T)
 $$
 3. Use the attribute with *highest* information gain. 
 4. Repeat (now considering the data subsection)
+
+### Data warehouses
+
 
 ### Misc
 
