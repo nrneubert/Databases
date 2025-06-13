@@ -587,7 +587,7 @@ $$
 ##### Nested loop join: $\textcolor{red}{\mathcal{O}(n^2)}$
 
 >==*NB*==: Size of the *inner relation* should be *largest*! 
-![[Pasted image 20250612110637.png|center | 600]]
+![[Pasted image 20250612110637.png|center | 400]]
 
 - Number of buffers in main memory determines how many blocks of the inner relation we can process simultaneously.
 - Relation size of the outer dominates the cost.
@@ -596,19 +596,110 @@ $$
 
 ##### Index-based join:
 
-![[Pasted image 20250612110858.png| center | 500]]
+![[Pasted image 20250612110858.png| center | 400]]
 
 
 ##### Sort-merge join:
 - *Most efficient* join is the **merge join**. To efficiently do this, we first *sort* the relations (or store them stored!) and *loads pairs of blocks* into memory and scans them!
 
-![[Pasted image 20250612111020.png| center | 500]]
+![[Pasted image 20250612111020.png| center | 400]]
 
 >==External sorting==: Sorting algorithm *suitable for large files on disk that do not fit entirely in main memory*, such as most database files.
 - <small>We sort large files that do not fit in main memory, typically using a sort-merge strategy where subfiles, runs, of the main file are sorted and these runs are then merged.</small>
 
 ##### Hash join:
-![[Pasted image 20250612111719.png| center | 500]]
+
+![[Pasted image 20250612111719.png| center | 400]]
+
+### Query optimization
+*Goal*: Transform query into faster, equivalent query.
+
+**Two types of optimization**:
+1. *Heuristic <u>(logical)</u> optimization*
+	$\Rightarrow$ query tree (relational algebra)! 
+2. *Cost-based <u>(physical)</u> optimization*
+
+**Comparison**:
+*Heuristic* approach is more efficient to generate, but may not yield the optimal query plan. 
+*Cost-based* approach relies heavily on statistics gathered.
+
+##### Heuristic optimization
+- Translate into query tree of relational algebra and optimize.
+
+**Translate SQL query directly into tree**:
+1. leaves as input tables
+2. apply operations sequential and build up
+
+**Steps to optimize**:
+1. Apply *selections* and *projections* <u>early</u> (consider *which are most restrictive*!).
+2. Break up *conjunctive selections* into sequence of $\sigma$. 
+3. *Transform* $\sigma_{C}( \ R \times S \ ) \Longrightarrow R \bowtie_{C} S$
+
+##### Cost-based optimization
+- Estimate and compare costs of queries with *different* strategies and choose the one *with the lowest estimate*.
+- ==Most common strategy==: *Bottom-up on the query tree, choose the best algorithm for implementing each operation*. 
+
+**( ! )** Need to define a <u>loss-function</u>.
+
+**Approach**:
+- Parameterize statistics on input relations
+- Compare algorithm choices for operators
+- Consider CPU-time, I/O-time, communication time, main-memory usage, or combinations.
+
+**Statistics**: Stored in *system catalog*.
+- number of records (tuples), $r$
+- record size, $R$
+- number of blocks, $b$
+- blocking factor; how many records per block, $bfr$
+- selectivity of an attribute, $sl$
+- selection cardinality of an attribute, $s=sl \cdot r$
+- join cardinality (estimated number of tuples from join)
+	$\Rightarrow$ most important value for *joins*.
+
+### Data mining
+- *Discovery of new information in terms of patterns or rules from vast amounts of data*.
+
+>==Knowledge-discovery in databases== (*KDD*):
+>![[Pasted image 20250613114236.png| center | 500]]
+
+>==Association rules==: Correlations between items in large datasets that appear to be associated with each other. 
+- *Example*: What items are frequently bought together?
+$$
+\{ \text{milk, butter, flour} \} \overbrace{\Longrightarrow}^{\text{yields association}} [ \text{milk} \Rightarrow \text{butter} ]
+$$
+1. ***Support***: percentage of transactions that contains all items in the rule (*prevalence*)
+2. ***Confidence***: ratio between the transactions containing LHS, and how many of these transactions that contain the RHS (*strength*)
+
+>==**Apriori principle**== (*monotonicity*): 
+- Any subset of a frequent itemset but also be frequent
+  $\Rightarrow$ *Any set that is <u>not frequent</u> can not be the subset of a frequent one*! (<u>downward closure/anti-monotinicity</u>)
+**Approach**
+1. Split into 1-itemsets, and calculate thresholds.
+2. Scratch any below the thresholds.
+3. Perform joins on all (remaining) combinations of 1-itemsets to create 2-itemsets.
+4. Repeat
+
+>==**K-means clustering**==: 
+- ( Initialization; partition objects into $k$ sets. )
+- Compute centroids of each cluster: $\mu_{C} = \frac{1}{|C|}\sum_{x_{i} \in C} x_{i}$
+- Assign objects to nearest centroid.
+- Repeat.
+>==Total-distance measure==: $TD = \sqrt{ \sum_{j=1}^{k} TD^2(C_{j}) }$
+- for "good" clusters we generally want low TD. 
+
+>==**Decision-tree classifiers**==: Flow-chart tree performing decision based on class predictions.
+- Nodes are *attributes*, branches are *outcomes*, and leaves are *predictors*. 
+**Building**: created *top-down*!
+1. Calculate total entropy based on predictors (YES/NO typically): $E_{tot} = - \sum_{i=1}^{n_{pred}} p_{i} \cdot \log_{2}(p_{i})$
+2. Calculate entropy and information gain for each attribute (consider only data for that attribute!):
+$$
+\begin{align}
+E(A) &= -\sum_{i=1}^{n_{\text{pred}}} p_{i} \cdot \log_{2}(p_{i}) \\
+G(A) &= E_{tot} - \sum_{i=1}^{n_\text{outcomes}} \frac{|O_{i}|}{|O|} \cdot E(T)
+\end{align}
+$$
+3. Use the attribute with *highest* information gain. 
+4. Repeat (now considering the data subsection)
 
 ### Misc
 
