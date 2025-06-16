@@ -16,6 +16,8 @@
 
 >==Closure of **set of attributes**==: Maximum set of attributes that can be inferred from the provided set of attributes. 
 
+----------------
+
 ### Normalization
 Database design principle to 
 1. *reduce redundancy*
@@ -49,6 +51,7 @@ $\Rightarrow$ No arrows pointing towards prime attributes!
 >==Losslessness==: Decomposition is lossless if we can recover initial table by performing multiple joins.
   ==Dependency preservation==: We do not lose dependencies. True if all dependencies can be inferred from the current set. 
 
+--------------------
 
 ### Triggers
 -  Can <u>not</u> modify the database schema; solely DML (*Data Manipulation Language*) for data-level operations.
@@ -56,6 +59,8 @@ $\Rightarrow$ No arrows pointing towards prime attributes!
 >Invoked *automatically*.
 >Defined in terms of the event *that invokes it*, and the *action it performs*.
 >May operate either `BEFORE` or `AFTER` the execution of the event that invokes it. 
+
+-----------------------
 
 ### Storage
 <u>Main memory vs. disk</u>:
@@ -100,6 +105,8 @@ $\Rightarrow$ No arrows pointing towards prime attributes!
 > ==Balanced==: all paths from root to a leaf have the same length. 
 - --> guarantees good search performance!
 
+-------------
+
 ### Authorization
 
 Preparing SQL statements they are compiled **only once**, but **executed multiple times**!
@@ -132,6 +139,8 @@ CREATE ROLE Paymaster;
 GRANT UPDATE(salary) ON Payroll TO Paymaster; 
 GRANT Paymaster TO amoeller WITH GRANT OPTION;
 ```
+
+--------------
 
 ### NoSQL
 $\equiv$ *Not Only SQL*.
@@ -169,6 +178,9 @@ Categories of systems:
 - *Less powerful query languages*!
 - May provide *multiple version storage*.
 - *Vertically* scalable (<u>not</u> horizontally)
+
+--------------
+
 ### Recovery strategies
 
 >==Idempotent==: *If a system crashes during the recovery stage, the new recovery must still give correct results*.
@@ -217,6 +229,8 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 2. Redo: *Repeat history*.
 3. Undo: *Roll back any uncommited transactions using the log*.
 
+--------------
+
 ### Transactions
 - Multiuser DBMS systems on single-threaded CPUs are <u>interleaved</u>.
 - Provides mechanism for logical units of database processing.
@@ -256,6 +270,8 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 4. ***Phantom reads***: 
 	- A transaction queries for an item twice. 
 	- Another transaction inserts an item matching the query between first and second read. 
+
+--------------
 
 ### Concurrency control
 
@@ -308,7 +324,6 @@ There are different types of schedules:
 >$\Rightarrow$ *Transactions can only read committed values!*
 3. ==Recoverable schedule==: 
 >"*No transaction commits until <u>all</u> transactions that have written an item that it read have committed*"
-
 
 #### Locking
 
@@ -426,6 +441,7 @@ To manage this hierarchy we introduce 3 more locks:
 	If $R_{TS} \leq TS(T_{i})$, then it is allowed. Then make a new version with $R_{TS}=W_{TS}=TS(T_{i})$.
 **( ! )**  <small>Storage (RAM and disk) is required to maintain multiple versions!</small>
 
+------------
 
 ### Relational algebra
 - Set of (*basic*!) operations for the *relational model*.
@@ -464,6 +480,8 @@ $_{\text{group attributes }}\mathfrak{J}_{\text{ aggregate functions}}(\mathrm{R
 `INTERSECTION`, $R \ \cap \ S$; combines all tuples that are in both relations
 
 `DIFFERENCE`, $R - S$; all tuples that are in $R$ but not in $S$. 
+
+------------
 
 ### Relational calculus
 - *Identical expressive power as relational algebra*.
@@ -516,6 +534,8 @@ $\Rightarrow$ *expressed as predicates that must <u>always</u> be fulfilled*!
 - Algebra: $\sigma_{\text{Price}<0}(\text{Product})=\emptyset$
 - TRC: $\neg \exists f(\text{Product}(f) \wedge f.Price < 0 )$
 - DRC: $\neg \exists I,N,P,C(\text{Product}(I,N,P,C) \wedge P < 0)$
+
+----------
 
 ### Query evaluation
 
@@ -611,6 +631,8 @@ $$
 
 ![[Pasted image 20250612111719.png| center | 400]]
 
+---------------
+
 ### Query optimization
 *Goal*: Transform query into faster, equivalent query.
 
@@ -655,6 +677,8 @@ $$
 - selection cardinality of an attribute, $s=sl \cdot r$
 - join cardinality (estimated number of tuples from join)
 	$\Rightarrow$ most important value for *joins*.
+
+----------------
 
 ### Data mining
 - *Discovery of new information in terms of patterns or rules from vast amounts of data*.
@@ -703,6 +727,8 @@ G(A) &= E_{tot} - \sum_{i=1}^{n_\text{outcomes}} \frac{|O_{i}|}{|O|} \cdot E(T)
 $$
 3. Use the attribute with *highest* information gain. 
 4. Repeat (now considering the data subsection)
+
+----------------
 
 ### Data warehouses
 Traditional databases are optimized for querying and updating; ==**OLTP**==; *"Online **Transactional** Processing"*. However, data warehouses are different:
@@ -770,7 +796,127 @@ $\Longrightarrow$
 
 **Major challenges**: Quality control, complexity, evolution of source databases, change in usage.
 
+----------------
+
+### Distributed database systems
+
+>==Distributed computing system==:
+> - Number of *processing sites* / *nodes*.
+> - Interconnected by *computer network*.
+> - *Cooperate* in performing tasks.
+> - Achieves *more computing power*, but with overhead of *coordination*.
+
+>==Distributed database== (**DDB**):
+> - Process unit of execution (*transaction*!) in *distributed manner*.
+> - Collection of *multiple logically related databases*.
+> - Distributed over *computer network*.
+> - DDBMS; "<i>Distributed Database Management System</i>", manages ==transparency== to user
+
+>==Transparency==: *Hide implementation details* from end users. Users <u>do not</u> worry about operational details of network!
+> - *Location transparency*: access from any location 
+> - *Naming transparency*: access to any named object from any site <small>(requires unambiguous names!)</small>
+> ...
+> - *Fragmentation transparency*: allows storing tuples or attributes at different sites
+> - *Replication transparency*: allows storing copies of data at multiple sites
+> 	$\Rightarrow$ <i>improves</i> ==reliability==<i> (system running efficiently) and </i>==availability==<i> (system continuously available)</i>!
+
+>==Query and update decomposition==: A query or update must be decomposed into subqueries that can be executed at the individual sites.
+
+>==Horizontal fragmentation== (*sharding*):  Horizontal subset of relation with tuples satisfying selection condition: $\sigma_{C}(R)$.
+>*Derived horizontal fragmentation*: Partitioning of primary relation to secondary relation via foreign keys. Meaning related data is fragmented in the same way.   
+>*Complete horizontal fragmentation*: Every tuple in $R$ satisfies $C_{1} \ \mathrm{OR} \ \dots C_{n}$.
+>*Disjoint complete horizontal fragmentation*: No tuple in $R$ satisfies $(C_{i} \ \mathrm{AND} \ C_{j}), \ i \neq j$.
+>Reconstruct $R$ using `UNION`.
+
+>==Vertical fragmentation==: Vertical subset of relation as a subset of columns, $\Pi_{L_{i}}(R)$.
+>**( ! )**: <i>Each fragment must contain the primary key of the relation</i>!
+>Reconstruct $R$ using `FULL OUTER JOIN`.
+>*Complete vertical fragmentation*: Set of vertical fragments include all attributes in $R$ and share only primary key attributes.
+$$
+\begin{align}
+L_{1} \ \cup \ L_{2} \ \cup \ \dots \ \cup \ L_{n} = \text{ATTRS}(R) \\
+L_{i} \ \cap \ L_{j} = \text{PK}(R), \forall (i,j)
+\end{align}
+$$
+
+>==Mixed/hybrid fragmentation==: Combination of vertical and horizontal fragmentation; $\Pi_{L_{i}}(\sigma_{C_{i}}(R))$.
+
+>==Fragmentation *schema*==: Definition of a *set* of fragments. Includes all tuples and attributes in database.
+>==Allocation *schema*==: Describes *distribution* of fragments to sites of distributed databases; *fully*, *partially replicated*, or *partitioned*. 
+
+>==Homogeneous distributed database system==: All sites of database system have *identical* setup (<i>same database software system</i>!), e.g. Oracle, DB2, Sybase, etc.
+>**( ! )** Underlying OS may be different: Linux, Windows, Unix, etc.
+
+>==Heterogeneous distributed database system== (*Federated*): Each site may run *different database system*, but data access is *a single* schema.
+>$\Rightarrow$ Each site <u>must adhere</u> to centralized access policy. 
+>**Issues**:
+>1. Differences in data model (relational, object oriented, hierarchical, network, etc.)
+>2. Differences in constraints
+>3. Differences in query language
+
+##### Catalog management
+>==***Catalog***==: databases with *metadata* about distributed database system
+
+>==Centralized catalogs==: Entire catalog is stored in single site. 
+>$\Rightarrow$ Easy to implement, but overload and bottleneck possible and also little reliability. 
+
+>==Fully replicated catalogs==: Each site stores copy of entire catalog. Updates are broadcasted. 
+>$\Rightarrow$ Faster reads locally, but bottleneck for write-intensive loads. 
+
+>==Partially replicated catalogs==: Each site stores catalog information on data stored at the site. System tracks catalog entries from original site and sites with copies. 
+>$\Rightarrow$ Updating copies may be delayed until access to data occurs. 
+
+##### Query processing
+- ==***Optimization criterion***==: *minimize data transfer across network*!
+- *e.g.* use ==**semi-joins**== and in general consider data transfer!
+
+<u>Approach</u>:
+<small>The input query is translated into an algebraic query on global relations, then mapped to separate queries on fragments, then optimized globally (typically with respect to communication cost), and finally optimized locally.</small>
+
+>==MapReduce==: <i>Efficient</i> and <i>scalable</i> distributed processing <i>automatically parallelized</i> with <i>runtime system</i>.
+> - *Easy to distribute chunks, balance workload, handle node failure*.
+> 1. Split data into chunks handled in <i>distributed manner</i>.
+> 2. Map each record into key-value pairs in a list; $\text{"a"} \rightarrow \{\text{"a"}, 1 \}$
+> 3. Sort the list based on the key value. 
+> 4. Reduce key-value pairs by merging to a list of all values. 
+> - *Example*: Inverted-index (counting word occurrences)
+> - *Example*: Sort-merge join
+
+##### Concurrency control and recovery
+- ==**main global consistency==** and ==**recover all copies with consistency**==
+
+>==Primary site technique==: Single site serves as coordinator for transaction management. Concurrency control and commits managed by primary site.
+>- In *2PL* this site <i>manages locks</i>.
+>**Disadvantages**: *overload primary site* and *primary site failure* ($\Rightarrow$ entire system will be 
+>inaccessible!)
+>**Recovery**: Designated backup site (<i>shadow</i> of primary site). 
+
+>==Primary copy technique==: A data item partition is designed a <i>primary copy</i>. Simply lock the primary copy of the data item.
+>**Advantage**: *no overload of site*
+>**Disadvantage**: *identification of primary copy complex*, *distributed directory must be maintained* 
+
+>==Voting==: Send lock requests to sites with the data item, and if majority of sites grants lock then the transactions gets the data item
+
+$\Longrightarrow$
+>==**2PC**== (*2-phase commit*): Transaction commits only when all nodes agree. 
+>If anything fails, then abort. Each node has it's own recovery scheme. 
+>*Global recovery manager* maintains information.
+>	**Phase 1**: All (participating) databases signal coordinator their part of the transaction has ended.
+>	**Phase 2**: If all votes (messages back to coordinator) is positive, then coordinator sends commit message. If not, then all participants undo locally. 
+$\Rightarrow$ If failure <i>after</i> "ready-to-commit" but <i>before</i> receiving "global-commit", the local site will be ==***blocked***== (<i>does not know what to do</i>)!
+
+$\Longrightarrow$
+>==**3PC**== (*3-phase commit*): Add "pre-commit" message to 2PC <i>between</i> voting and global decision. Coordinator receives all pre-commit messages <i>and then</i> sends global decision. 
+>$\Rightarrow$ <small>Means that participants receiving such a message know that all participants have voted commit!</small>
+> - *No blocking*!
+
+---------------
+
 ### Misc
+
+>==Parallel database==: Builds on multiprocessor architecture, which can be either
+> 1.  *tightly coupled* with <i>shared primary memory</i> and <i>disk storage</i>, 
+> 2. *loosely coupled* with <i>secondary disk storage</i>, but <i>separate primary memory</i>. 
 
 There are 2 main ways of scaling a *database system*; 
 adding more resources or adding a new system.
