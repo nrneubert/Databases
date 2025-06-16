@@ -705,7 +705,70 @@ $$
 4. Repeat (now considering the data subsection)
 
 ### Data warehouses
+Traditional databases are optimized for querying and updating; ==**OLTP**==; *"Online **Transactional** Processing"*. However, data warehouses are different:
 
+>==**OLAP**==: "Online Analytical Processing", supports analysis of complex data (mostly *read-access*! - selectivity depends...)
+
+>==**DSS**==: "Decision Support Systems", otherwise known as *EIS*; "Executive Information Systems" or *MIS*; "Management Information Systems"
+>$\Rightarrow$  supports making organization decisions based on historical data.
+
+<u>Typically</u>;
+1. *multiple databases*
+2. *recurrent and predictable analysis*
+3. *software designed specifically for requirements*
+
+**Views vs. Warehouse**: Alike because both have read-only extracts, but
+- Warehouses are *persistent storage*, while views are *materialized* on demand!
+- and the structure is not at all alike (relational vs. multidimensional)!
+
+**Best database (OLTP) compromise** is a *normalized* and *distributed* (scalability!) database. 
+
+**Comparison with traditional databases**:
+- Warehouses optimized for data access, whilst databases for transactional and integrity measures.
+- Warehouses emphasize historical data 
+- Warehouses are nonvolatile (not changed or deleted!)
+
+>==Structure==:
+![[Pasted image 20250616094446.png | center | 500]]
+  $\Rightarrow$ 
+>1. Extract, transform, load (*ETL*): cleaning and reformatting data <u>fetched from databases</u>
+>2. Data warehouse: sends data to *OLAP* or *data mining*
+
+>==**ETL**== (*Extract, transform, load*): 
+>- Process of inserting data from transactional database(s).
+>	$\star$ different source databases with different schemas
+>- Cleaning, validity, and quality of data.
+>	$\star$ incomplete data is corrected and backflushed to database
+>- Convert data to model of data warehouse
+> <small><strong>( ! )</strong> Loading so much data is challenging, so typically it goes offline for regular intervals!</small>
+
+>==Data modelling==: Typically, *measures* are related to *several attributes* in a $N$-dimensional grid. Reasons for this is:
+>1. Better query performance 
+>2. Non-volatile
+>3. High predictability based on expected analysis
+>- *Example*: sales per. region/product/time period
+
+$\Longrightarrow$
+>==Multi-dimensional schemas==: Data organized in **hyper cubes**. 
+>- *Dimension table*: Tuples of attributes of the dimension (typically denormalized!)
+>- *Fact table*: Each tuple is a recorded fact, containing a measure or observed attribute(s). Identified with pointer(s) <u>to</u> dimension table!
+- How to do SQL queries in such structure? $\Rightarrow$ aggregates and `GROUP BY`.
+
+>==Star schema==: Fact table with <u>a single table for each dimension</u> (creates star-pattern!).
+
+>==Snowflake schema==: Dimensional tables from a star schema are organized into a hierarchy by normalizing them (creating branches and giving a snowflake-pattern!)
+
+>==Galaxy schema== (*fact constellation*): set of tables that share some dimension tables ($\Rightarrow$ multiple fact tables).
+> - Essentially, a collection of star schemas.  
+> - Hard to manage and support but very flexible. 
+
+>==Navigating a warehouse== by following *functionalities*;
+>1. *Roll-up*: move up in hierarchy (along 1 dimensional axis), so aggregate from smaller to larger regions (fine -> coarse).
+>2. *Drill-down*: opposite of roll-up, so coarse -> fine
+>3. *Pivoting*: rotate the reading axis
+>- *slice* and *dice* <small>(projections)</small>, *sorting*, *selection*, *derived attributes* 
+
+**Major challenges**: Quality control, complexity, evolution of source databases, change in usage.
 
 ### Misc
 
