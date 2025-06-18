@@ -319,11 +319,14 @@ $$
 There are different types of schedules:
 1. ==Cascadeless schedule==: Mitigates cascading rollbacks
 >"*Every transaction reads only items written by committed transactions*"
+$\Rightarrow$ "<u>can not read uncommited data, but can write</u>"
 2. ==Strict schedule==: Mitigates cascading rollbacks
 >"*Transaction can neither read or write item until <u>the last</u> transaction that wrote it has committed.*"
 >$\Rightarrow$ *Transactions can only read committed values!*
+$\Rightarrow$ "<u>can neither read or write uncommited data</u>"
 3. ==Recoverable schedule==: 
 >"*No transaction commits until <u>all</u> transactions that have written an item that it read have committed*"
+$\Rightarrow$ "<u>a transaction that reads from another transaction commits only after the one it depends on commits.</u>"
 
 #### Locking
 
@@ -383,6 +386,12 @@ $$
 \end{align}
 $$
 $\Rightarrow$ and one of these steps must be true!
+
+>==Versions of 2PL==: 
+    ==**Basic**==: Locks are acquired incrementally
+    ==**Strict**==: Upon commit exclusive locks are immediately released
+    ==**Rigorious**==: Upon commit all locks (shared & exclusive) are immediately released.
+    ==**Conservative**==: Before transactions start, they acquire all needed locks, and release them again upon commit. 
 
 >==Multi-version 2-phase locking w. certify locks ==: Allows a transaction $T'$ to read a data item $X$ while it is write-locked by a conflicting transaction $T$.
 - $\Rightarrow$ 3 locks: *read*, *write* (<small>now not exclusive, reads possible</small>), and *certify* (<small>fully exclusive</small>).
