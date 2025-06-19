@@ -51,6 +51,9 @@ $\Rightarrow$ No arrows pointing towards prime attributes!
 >==Losslessness==: Decomposition is lossless if we can recover initial table by performing multiple joins.
   ==Dependency preservation==: We do not lose dependencies. True if all dependencies can be inferred from the current set. 
 
+>==4NF==: Must be *BCNF*. For non-trivial MVD $X \rightarrow\rightarrow Y$, then $X$ must be a superkey. 
+>Nontrivial MVD means that: $X\nsupseteq Y$. 
+
 --------------------
 
 ### Triggers
@@ -177,7 +180,7 @@ Categories of systems:
 - *No schema required*, instead *semi-structured* data such as JSON, XML!
 - *Less powerful query languages*!
 - May provide *multiple version storage*.
-- *Vertically* scalable (<u>not</u> horizontally)
+- *Horizontally* scalable - more machines (<u>not typically</u> vertically - more RAM)
 
 --------------
 
@@ -214,20 +217,18 @@ $\Longrightarrow$ *possible to use both techniques, but often redundant because 
 | **No-force** | Undo / redo    | No-undo / redo    |
 
 >==Undo/redo==:
-1. Undo all transactions that has a log entry of *"start"* but no *"commit"*.
-2. Redo all transactions that has a long entry of *"start"* and *"commit"*.
+>1. Undo all transactions that has a log entry of *"start"* but no *"commit"*.
+>2. Redo all transactions that has a long entry of *"start"* and *"commit"*.
 
 >==ARIES==: *Recovery algorithm implemented in many IBM related databases*.
-
-**Based on 3 key ideas**:
-1. Write Ahead Logging: *Log changes **before** writing them to disk.*
-2. Repeat history during redo: *Reapply all actions, including uncommited, to **reconstruct state***
-3. Logging changes during undo: *When undoing, **log each undo action**, so crash during recovery is safe* (**idempotent**)
-
-**Using a 3-phase recovery**:
-1. Analysis: *Identify dirty pages and active transactions*.
-2. Redo: *Repeat history*.
-3. Undo: *Roll back any uncommited transactions using the log*.
+  **Based on 3 key ideas**:
+>3. Write Ahead Logging: *Log changes **before** writing them to disk.*
+>4. Repeat history during redo: *Reapply all actions, including uncommited, to **reconstruct state***
+>5. Logging changes during undo: *When undoing, **log each undo action**, so crash during recovery is safe* (**idempotent**)
+>**Using a 3-phase recovery**:
+>6. Analysis: *Identify dirty pages and active transactions*.
+>7. Redo: *Repeat history*.
+>8. Undo: *Roll back any uncommited transactions using the log*.
 
 --------------
 
